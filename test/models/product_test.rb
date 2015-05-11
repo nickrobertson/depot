@@ -56,6 +56,23 @@ class ProductTest < ActiveSupport::TestCase
     assert_equal [I18n.translate('errors.messages.taken')],
                  product.errors[:title]
   end
+
+  test "product is invalid when title is less than ten characters" do
+    product = Product.new(title: 'test',
+                          description: "yyy",
+                          price: 1,
+                          image_url: "fred.gif")
+    assert product.invalid?
+    assert_equal ["is too short (minimum is 10 characters)"], product.errors[:title]
+  end
+
+  test "product is valid when title is ten characters or more" do
+    product = Product.new(title: 'The Title of Book',
+                          description: "yyy",
+                          price: 1,
+                          image_url: "fred.gif")
+    assert product.valid?
+  end
   # Test below is getting hard coded message
   # test "product is not valid without a unique title" do
   #   product = Product.new(title:        products(:ruby).title,
